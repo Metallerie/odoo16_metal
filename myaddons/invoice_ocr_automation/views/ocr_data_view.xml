@@ -1,0 +1,27 @@
+
+<odoo>
+    <!-- Action pour ouvrir la vue d'acquisition OCR >
+    <record id="action_open_ocr_data_view" model="ir.actions.act_window">
+        <field name="name">OCR Data Acquisition</field>
+        <field name="res_model">ocr.data.acquisition</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ocr_data_acquisition_form"/>
+        <field name="target">current</field>
+    </record>
+
+    < Définition de la vue form pour le modèle ocr.data.acquisition >
+    <record id="view_ocr_data_acquisition_form" model="ir.ui.view">
+        <field name="name">ocr.data.acquisition.form</field>
+        <field name="model">ocr.data.acquisition</field>
+        <field name="arch" type="xml">
+            <form string="Acquisition de Données OCR">
+                <group>
+                    <field name="name"/>
+                    <field name="image_path"/>
+                    <field name="ocr_text"/>
+                    <field name="extracted_data_ids"/>
+                </group>
+            </form>
+        </field>
+    </record-->
+</odoo>

@@ -1,0 +1,285 @@
+2025-01-31 17:07:33,027 619847 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-01 14:20:47,600 784972 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_cron: Call from cron Backup scheduler for server action #337 failed in Job #18 
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 362, in safe_eval
+    return unsafe_eval(c, globals_dict, locals_dict)
+  File "ir.actions.server(337,)", line 1, in <module>
+  File "/data/odoo/metal-odoo16-p8171/communityaddons/auto_backup/models/db_backup.py", line 123, in schedule_backup
+    os.makedirs(rec.folder)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 225, in makedirs
+    mkdir(name, mode)
+PermissionError: [Errno 13] Permission denied: '/home/odoo'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_cron.py", line 368, in _callback
+    self.env['ir.actions.server'].browse(server_action_id).run()
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 668, in run
+    res = runner(run_self, eval_context=eval_context)
+  File "/data/odoo/metal-odoo16-p8171/addons/website/models/ir_actions_server.py", line 61, in _run_action_code_multi
+    res = super(ServerAction, self)._run_action_code_multi(eval_context)
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 538, in _run_action_code_multi
+    safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 376, in safe_eval
+    raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
+ValueError: <class 'PermissionError'>: "13
+Permission denied" while evaluating
+'model.schedule_backup()'
+2025-02-02 14:20:57,662 784972 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_cron: Call from cron Backup scheduler for server action #337 failed in Job #18 
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 362, in safe_eval
+    return unsafe_eval(c, globals_dict, locals_dict)
+  File "ir.actions.server(337,)", line 1, in <module>
+  File "/data/odoo/metal-odoo16-p8171/communityaddons/auto_backup/models/db_backup.py", line 123, in schedule_backup
+    os.makedirs(rec.folder)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 225, in makedirs
+    mkdir(name, mode)
+PermissionError: [Errno 13] Permission denied: '/home/odoo'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_cron.py", line 368, in _callback
+    self.env['ir.actions.server'].browse(server_action_id).run()
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 668, in run
+    res = runner(run_self, eval_context=eval_context)
+  File "/data/odoo/metal-odoo16-p8171/addons/website/models/ir_actions_server.py", line 61, in _run_action_code_multi
+    res = super(ServerAction, self)._run_action_code_multi(eval_context)
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 538, in _run_action_code_multi
+    safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 376, in safe_eval
+    raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
+ValueError: <class 'PermissionError'>: "13
+Permission denied" while evaluating
+'model.schedule_backup()'
+2025-02-02 15:40:35,268 784972 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-03 13:07:15,144 1112877 ERROR ? werkzeug: 91.238.181.33 - - [03/Feb/2025 13:07:15] code 400, message Bad HTTP/0.9 request type ('\x03\x00\x00/*à\x00\x00\x00\x00\x00Cookie:') - - -
+2025-02-03 13:07:15,144 1112877 ERROR ? odoo.service.server: Exception happened during processing of request from ('91.238.181.33', 65527) 
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.10/socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/lib/python3.10/socketserver.py", line 747, in __init__
+    self.handle()
+  File "/data/odoo/odoo16-venv/lib/python3.10/site-packages/werkzeug/serving.py", line 342, in handle
+    BaseHTTPRequestHandler.handle(self)
+  File "/usr/lib/python3.10/http/server.py", line 433, in handle
+    self.handle_one_request()
+  File "/data/odoo/odoo16-venv/lib/python3.10/site-packages/werkzeug/serving.py", line 373, in handle_one_request
+    elif self.parse_request():
+  File "/usr/lib/python3.10/http/server.py", line 328, in parse_request
+    self.send_error(
+  File "/usr/lib/python3.10/http/server.py", line 465, in send_error
+    self.send_header('Connection', 'close')
+  File "/data/odoo/metal-odoo16-p8171/odoo/service/server.py", line 145, in send_header
+    if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
+AttributeError: 'RequestHandler' object has no attribute 'headers'
+2025-02-03 14:20:22,940 1112877 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_cron: Call from cron Backup scheduler for server action #337 failed in Job #18 
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 362, in safe_eval
+    return unsafe_eval(c, globals_dict, locals_dict)
+  File "ir.actions.server(337,)", line 1, in <module>
+  File "/data/odoo/metal-odoo16-p8171/communityaddons/auto_backup/models/db_backup.py", line 123, in schedule_backup
+    os.makedirs(rec.folder)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 225, in makedirs
+    mkdir(name, mode)
+PermissionError: [Errno 13] Permission denied: '/home/odoo'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_cron.py", line 368, in _callback
+    self.env['ir.actions.server'].browse(server_action_id).run()
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 668, in run
+    res = runner(run_self, eval_context=eval_context)
+  File "/data/odoo/metal-odoo16-p8171/addons/website/models/ir_actions_server.py", line 61, in _run_action_code_multi
+    res = super(ServerAction, self)._run_action_code_multi(eval_context)
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 538, in _run_action_code_multi
+    safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 376, in safe_eval
+    raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
+ValueError: <class 'PermissionError'>: "13
+Permission denied" while evaluating
+'model.schedule_backup()'
+2025-02-04 06:32:40,329 1112877 ERROR ? werkzeug: 91.238.181.34 - - [04/Feb/2025 06:32:40] code 400, message Bad HTTP/0.9 request type ('\x03\x00\x00/*à\x00\x00\x00\x00\x00Cookie:') - - -
+2025-02-04 06:32:40,332 1112877 ERROR ? odoo.service.server: Exception happened during processing of request from ('91.238.181.34', 65169) 
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.10/socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/lib/python3.10/socketserver.py", line 747, in __init__
+    self.handle()
+  File "/data/odoo/odoo16-venv/lib/python3.10/site-packages/werkzeug/serving.py", line 342, in handle
+    BaseHTTPRequestHandler.handle(self)
+  File "/usr/lib/python3.10/http/server.py", line 433, in handle
+    self.handle_one_request()
+  File "/data/odoo/odoo16-venv/lib/python3.10/site-packages/werkzeug/serving.py", line 373, in handle_one_request
+    elif self.parse_request():
+  File "/usr/lib/python3.10/http/server.py", line 328, in parse_request
+    self.send_error(
+  File "/usr/lib/python3.10/http/server.py", line 465, in send_error
+    self.send_header('Connection', 'close')
+  File "/data/odoo/metal-odoo16-p8171/odoo/service/server.py", line 145, in send_header
+    if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
+AttributeError: 'RequestHandler' object has no attribute 'headers'
+2025-02-04 07:27:24,253 1112877 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-04 14:20:51,384 1112877 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_cron: Call from cron Backup scheduler for server action #337 failed in Job #18 
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 362, in safe_eval
+    return unsafe_eval(c, globals_dict, locals_dict)
+  File "ir.actions.server(337,)", line 1, in <module>
+  File "/data/odoo/metal-odoo16-p8171/communityaddons/auto_backup/models/db_backup.py", line 123, in schedule_backup
+    os.makedirs(rec.folder)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 225, in makedirs
+    mkdir(name, mode)
+PermissionError: [Errno 13] Permission denied: '/home/odoo'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_cron.py", line 368, in _callback
+    self.env['ir.actions.server'].browse(server_action_id).run()
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 668, in run
+    res = runner(run_self, eval_context=eval_context)
+  File "/data/odoo/metal-odoo16-p8171/addons/website/models/ir_actions_server.py", line 61, in _run_action_code_multi
+    res = super(ServerAction, self)._run_action_code_multi(eval_context)
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 538, in _run_action_code_multi
+    safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 376, in safe_eval
+    raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
+ValueError: <class 'PermissionError'>: "13
+Permission denied" while evaluating
+'model.schedule_backup()'
+2025-02-04 23:38:59,377 1112877 ERROR ? werkzeug: 88.214.25.62 - - [04/Feb/2025 23:38:59] code 400, message Bad HTTP/0.9 request type ('\x03\x00\x00/*à\x00\x00\x00\x00\x00Cookie:') - - -
+2025-02-04 23:38:59,378 1112877 ERROR ? odoo.service.server: Exception happened during processing of request from ('88.214.25.62', 2397) 
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.10/socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/lib/python3.10/socketserver.py", line 747, in __init__
+    self.handle()
+  File "/data/odoo/odoo16-venv/lib/python3.10/site-packages/werkzeug/serving.py", line 342, in handle
+    BaseHTTPRequestHandler.handle(self)
+  File "/usr/lib/python3.10/http/server.py", line 433, in handle
+    self.handle_one_request()
+  File "/data/odoo/odoo16-venv/lib/python3.10/site-packages/werkzeug/serving.py", line 373, in handle_one_request
+    elif self.parse_request():
+  File "/usr/lib/python3.10/http/server.py", line 328, in parse_request
+    self.send_error(
+  File "/usr/lib/python3.10/http/server.py", line 465, in send_error
+    self.send_header('Connection', 'close')
+  File "/data/odoo/metal-odoo16-p8171/odoo/service/server.py", line 145, in send_header
+    if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
+AttributeError: 'RequestHandler' object has no attribute 'headers'
+2025-02-05 14:20:51,870 1112877 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_cron: Call from cron Backup scheduler for server action #337 failed in Job #18 
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 362, in safe_eval
+    return unsafe_eval(c, globals_dict, locals_dict)
+  File "ir.actions.server(337,)", line 1, in <module>
+  File "/data/odoo/metal-odoo16-p8171/communityaddons/auto_backup/models/db_backup.py", line 123, in schedule_backup
+    os.makedirs(rec.folder)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 225, in makedirs
+    mkdir(name, mode)
+PermissionError: [Errno 13] Permission denied: '/home/odoo'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_cron.py", line 368, in _callback
+    self.env['ir.actions.server'].browse(server_action_id).run()
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 668, in run
+    res = runner(run_self, eval_context=eval_context)
+  File "/data/odoo/metal-odoo16-p8171/addons/website/models/ir_actions_server.py", line 61, in _run_action_code_multi
+    res = super(ServerAction, self)._run_action_code_multi(eval_context)
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 538, in _run_action_code_multi
+    safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 376, in safe_eval
+    raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
+ValueError: <class 'PermissionError'>: "13
+Permission denied" while evaluating
+'model.schedule_backup()'
+2025-02-05 17:09:52,249 1112877 ERROR ? werkzeug: 147.45.112.222 - - [05/Feb/2025 17:09:52] code 400, message Bad HTTP/0.9 request type ('\x03\x00\x00/*à\x00\x00\x00\x00\x00Cookie:') - - -
+2025-02-05 17:09:52,250 1112877 ERROR ? odoo.service.server: Exception happened during processing of request from ('147.45.112.222', 65210) 
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.10/socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/lib/python3.10/socketserver.py", line 747, in __init__
+    self.handle()
+  File "/data/odoo/odoo16-venv/lib/python3.10/site-packages/werkzeug/serving.py", line 342, in handle
+    BaseHTTPRequestHandler.handle(self)
+  File "/usr/lib/python3.10/http/server.py", line 433, in handle
+    self.handle_one_request()
+  File "/data/odoo/odoo16-venv/lib/python3.10/site-packages/werkzeug/serving.py", line 373, in handle_one_request
+    elif self.parse_request():
+  File "/usr/lib/python3.10/http/server.py", line 328, in parse_request
+    self.send_error(
+  File "/usr/lib/python3.10/http/server.py", line 465, in send_error
+    self.send_header('Connection', 'close')
+  File "/data/odoo/metal-odoo16-p8171/odoo/service/server.py", line 145, in send_header
+    if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
+AttributeError: 'RequestHandler' object has no attribute 'headers'
+2025-02-06 08:21:00,617 1999075 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-06 08:31:36,627 1999075 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-06 08:34:24,699 1999075 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-06 08:46:43,357 2027092 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-06 10:17:04,888 2027092 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-06 10:27:30,112 2027092 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-06 10:27:47,194 2027092 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-06 10:42:55,501 2027092 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_model: Missing model supplier.ocr.config 
+2025-02-06 14:20:46,872 2027092 ERROR 1-metal-odoo16 odoo.addons.base.models.ir_cron: Call from cron Backup scheduler for server action #337 failed in Job #18 
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 362, in safe_eval
+    return unsafe_eval(c, globals_dict, locals_dict)
+  File "ir.actions.server(337,)", line 1, in <module>
+  File "/data/odoo/metal-odoo16-p8171/communityaddons/auto_backup/models/db_backup.py", line 123, in schedule_backup
+    os.makedirs(rec.folder)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 215, in makedirs
+    makedirs(head, exist_ok=exist_ok)
+  File "/usr/lib/python3.10/os.py", line 225, in makedirs
+    mkdir(name, mode)
+PermissionError: [Errno 13] Permission denied: '/home/odoo'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_cron.py", line 368, in _callback
+    self.env['ir.actions.server'].browse(server_action_id).run()
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 668, in run
+    res = runner(run_self, eval_context=eval_context)
+  File "/data/odoo/metal-odoo16-p8171/addons/website/models/ir_actions_server.py", line 61, in _run_action_code_multi
+    res = super(ServerAction, self)._run_action_code_multi(eval_context)
+  File "/data/odoo/metal-odoo16-p8171/odoo/addons/base/models/ir_actions.py", line 538, in _run_action_code_multi
+    safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+  File "/data/odoo/metal-odoo16-p8171/odoo/tools/safe_eval.py", line 376, in safe_eval
+    raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
+ValueError: <class 'PermissionError'>: "13
+Permission denied" while evaluating
+'model.schedule_backup()'

@@ -1,0 +1,404 @@
+ Noms du module fais avec scaffold /home/odoo/metal-odoo16-p8171/myaddons/invoice_ocr_automation
+
+__manifest__.py
+ 
+ # -*- coding: utf-8 -*-
+{
+    'name': "Automatisation OCR Factures Fournisseurs",
+    'version': '1.0',
+    'depends': ['base', 'account'],
+    'author': "Franck companie",
+    'category': 'Accounting',
+    'summary': 'Automatise l’OCR des factures fournisseurs pour mise à jour des informations',
+    'data': [
+        'security/ir.model.access.csv',
+        'views/supplier_ocr_config_views.xml',
+        'views/menu_views.xml',
+        'data/cron_data.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'license': 'LGPL-3',
+}
+ /home/odoo/metal-odoo16-p8171/myaddons/invoice_ocr_automation/models
+ invoice_processing.py
+ 
+ from odoo import models, fields, api
+from ..utils.ocr_processing import extract_text, parse_invoice
+import os
+
+class InvoiceProcessing(models.Model):
+    _name = 'invoice.processing'
+    _description = 'Traitement OCR des Factures'
+
+    @api.model
+    def _ocr_acquisition(self, file_path):
+        """Traite le fichier via OCR et renvoie le texte extrait"""
+        text = extract_text(file_path)
+        return text
+
+    @api.model
+    def _update_supplier_from_text(self, text, supplier_config):
+        """Mise à jour de res.partner en fonction du texte OCR"""
+        data = parse_invoice(text, {})
+        partner = self.env['res.partner'].search([('siret', '=', data.get('siret'))], limit=1)
+        
+        if partner:
+            partner.write({key: value for key, value in data.items() if value is not None})
+        else:
+            self.env['res.partner'].create({key: value for key, value in data.items() if value is not None})
+
+ supplier_ocr_config.py
+ from odoo import models, fields, api, _
+from odoo.exceptions import UserError
+import base64
+import os
+import tempfile
+import logging
+from pdf2image import convert_from_path
+
+_logger = logging.getLogger(__name__)
+
+class SupplierOCRConfig(models.Model):
+    _name = 'supplier.ocr.config'
+    _description = 'Configuration OCR des Fournisseurs'
+
+    # Champs principaux
+    name = fields.Char("Nom du Fournisseur", required=True)
+    siret = fields.Char("SIRET", required=True)
+    vat_number = fields.Char("Numéro de TVA")
+    field_positions = fields.Text("Positions des Champs")  # Zones spécifiques pour OCR
+    footer_fees = fields.Boolean("Frais en Pied de Page", default=False)
+
+    # Champs pour le fichier modèle et le téléchargement manuel
+    image_facture = fields.Binary("Facture Modèle", attachment=True, store=True, help="Téléchargez une facture modèle pour définir les zones.")
+    file_name = fields.Char("Nom du fichier modèle")  # Nom du fichier image pour référence
+    file_upload = fields.Binary("Télécharger une autre facture", attachment=True, store=True)
+    file_name_upload = fields.Char("Nom du fichier", default="facture_par_defaut.pdf")
+
+    # Champ calculé pour afficher la dernière image convertie
+    last_attachment = fields.Binary("Dernière Page de la Facture", compute='_compute_last_attachment', store=False)
+
+    @api.depends('file_upload')
+    def _compute_last_attachment(self):
+        """Récupère le dernier fichier attaché pour cet enregistrement"""
+        for record in self:
+            attachment = self.env['ir.attachment'].search([
+                ('res_model', '=', 'supplier.ocr.config'),
+                ('res_id', '=', record.id)
+            ], order="id desc", limit=1)
+            record.last_attachment = attachment.datas if attachment else None
+
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
+import base64
+import os
+import tempfile
+import logging
+from pdf2image import convert_from_path
+from datetime import datetime
+
+_logger = logging.getLogger(__name__)
+
+class SupplierOCRConfig(models.Model):
+    _name = 'supplier.ocr.config'
+    _description = 'Configuration OCR des Fournisseurs'
+
+    # Champs principaux
+    name = fields.Char("Nom du Fournisseur", required=True)
+    siret = fields.Char("SIRET", required=True)
+    vat_number = fields.Char("Numéro de TVA")
+    field_positions = fields.Text("Positions des Champs")  # Zones spécifiques pour OCR
+    footer_fees = fields.Boolean("Frais en Pied de Page", default=False)
+
+    # Champs pour le fichier modèle et le téléchargement manuel
+    image_facture = fields.Binary("Facture Modèle", attachment=True, store=True, help="Téléchargez une facture modèle pour définir les zones.")
+    file_name = fields.Char("Nom du fichier modèle")  # Nom du fichier image pour référence
+    file_upload = fields.Binary("Télécharger une autre facture", attachment=True, store=True)
+    file_name_upload = fields.Char("Nom du fichier", default="facture_par_defaut.pdf")
+
+    # Champ calculé pour afficher la dernière image convertie
+    last_attachment = fields.Binary("Dernière Page de la Facture", compute='_compute_last_attachment', store=False)
+
+    @api.depends('file_upload')
+    def _compute_last_attachment(self):
+        """Récupère le dernier fichier attaché pour cet enregistrement"""
+        for record in self:
+            attachment = self.env['ir.attachment'].search([
+                ('res_model', '=', 'supplier.ocr.config'),
+                ('res_id', '=', record.id)
+            ], order="id desc", limit=1)
+            record.last_attachment = attachment.datas if attachment else None
+
+    def action_acquisition_manuel(self):
+        """Lancer le processus d'OCR pour le fichier téléchargé"""
+        _logger.info("[DEBUG] Bouton d'acquisition manuel activé.")
+        
+        if not self.file_upload:
+            raise ValueError("Veuillez télécharger un fichier avant de lancer l'acquisition.")
+
+        # Si le champ `file_name_upload` est vide, lui assigner un nom par défaut
+        if not self.file_name_upload:
+            self.file_name_upload = "facture_par_defaut.pdf"
+
+        # Enregistrer temporairement le fichier PDF
+        temp_dir = tempfile.gettempdir()
+        file_path = os.path.join(temp_dir, self.file_name_upload)
+        pdf_content = base64.b64decode(self.file_upload)
+        
+        with open(file_path, 'wb') as f:
+            f.write(pdf_content)
+        
+        _logger.info(f"[DEBUG] Fichier PDF temporaire sauvegardé à : {file_path}")
+
+        # Convertir et sauvegarder chaque page comme attachement
+        try:
+            images = convert_from_path(file_path, dpi=200)
+            for i, image in enumerate(images):
+                # Définir le nom de l'image en fonction du modèle `model_nom-du-fournisseur_date.png`
+                supplier_name = self.name.replace(" ", "_")
+                current_date = datetime.today().strftime('%Y-%m-%d')
+                image_name = f"model_{supplier_name}_{current_date}.png"
+                image_path = os.path.join(temp_dir, image_name)
+                
+                image.save(image_path, "PNG")
+                
+                with open(image_path, "rb") as img_file:
+                    img_data = base64.b64encode(img_file.read())
+                    attachment = self.env['ir.attachment'].create({
+                        'name': image_name,
+                        'type': 'binary',
+                        'datas': img_data,
+                        'res_model': 'supplier.ocr.config',
+                        'res_id': self.id,
+                        'mimetype': 'image/png',
+                    })
+                    _logger.info(f"[DEBUG] Image sauvegardée comme attachement avec l'ID : {attachment.id} et nom : {image_name}")
+                
+                self.file_name = image_name  # Dernière image convertie
+                os.remove(image_path)  # Supprimer le fichier temporaire après sauvegarde
+        except Exception as e:
+            _logger.error(f"[ERROR] Erreur lors de la conversion du PDF en images : {e}")
+            raise ValueError("Erreur lors de la conversion du PDF en images. Vérifiez que le fichier est un PDF valide.")
+        
+        os.remove(file_path)  # Supprimer le fichier temporaire PDF
+
+        # Forcer la mise à jour du champ calculé pour afficher la dernière image
+        self._compute_last_attachment()
+
+    def action_telecharger_facture(self):
+        """Télécharger le fichier PDF original depuis le champ `file_upload`"""
+        if not self.file_upload:
+            raise UserError(_("Aucun fichier disponible pour le téléchargement."))
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f"/web/content?model=supplier.ocr.config&id={self.id}&field=file_upload&download=true&filename={self.file_name_upload}",
+            'target': 'self',
+        }
+ /home/odoo/metal-odoo16-p8171/myaddons/invoice_ocr_automation/utils/
+ 
+ ocr_processing.py
+ 
+ import pytesseract
+from PIL import Image, ImageEnhance
+from pdf2image import convert_from_path
+import re
+import os
+import tempfile
+import logging
+import base64
+
+
+# Configuration du logger pour écrire dans le fichier de log d’Odoo
+log_file_path = "/home/odoo/metal-odoo16-p8171/odoo-server.log"
+logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+def save_temp_pdf(binary_data, file_name="temp_pdf"):
+    """
+    Décoder les données PDF base64 et les sauvegarder dans un fichier temporaire.
+    """
+    try:
+        temp_dir = tempfile.gettempdir()
+        pdf_path = os.path.join(temp_dir, file_name + ".pdf")
+        with open(pdf_path, "wb") as f:
+            f.write(base64.b64decode(binary_data))
+        logger.info(f"Fichier PDF temporaire sauvegardé à : {pdf_path}")
+        return pdf_path
+    except Exception as e:
+        logger.error(f"Erreur lors de la sauvegarde du fichier PDF temporaire : {e}")
+        return None
+
+def convert_pdf_to_images(pdf_binary_data, output_folder="/home/odoo/metal-odoo16-p8171/uploads/invoice_supplier"):
+    """
+    Convertit un PDF (encodé en base64) en images PNG et enregistre chaque page dans output_folder.
+    """
+    # Sauvegarde temporaire du PDF
+    pdf_path = save_temp_pdf(pdf_binary_data, "uploaded_invoice")
+    
+    if not pdf_path:
+        logger.error("Le fichier PDF n'a pas pu être sauvegardé. Processus annulé.")
+        return []
+
+    try:
+        logger.info(f"Début de la conversion du PDF en images depuis : {pdf_path}")
+        images = convert_from_path(pdf_path, dpi=300)
+        image_paths = []
+        for i, image in enumerate(images):
+            image_path = os.path.join(output_folder, f"invoice_page_{i + 1}.png")
+            image.save(image_path, "PNG")
+            if os.path.exists(image_path):
+                logger.info(f"Image sauvegardée et accessible : {image_path}")
+            else:
+                logger.error(f"Image non trouvée après la sauvegarde : {image_path}")
+            image_paths.append(image_path)
+        
+        os.remove(pdf_path)  # Suppression du fichier temporaire PDF
+        logger.info(f"Fichier PDF temporaire supprimé : {pdf_path}")
+        
+        return image_paths
+    except Exception as e:
+        logger.error(f"Erreur lors de la conversion du PDF en images : {e}")
+        return []
+        
+        
+        
+def extract_text_from_image(image_path):
+    """
+    Extrait le texte d'une image avec OCR.
+    """
+    image = Image.open(image_path)
+    enhancer = ImageEnhance.Contrast(image.convert('L'))
+    image = enhancer.enhance(2.0).point(lambda x: 0 if x < 128 else 255, '1')
+    return pytesseract.image_to_string(image, lang='fra')
+
+def extract_text(file_path):
+    """
+    Extrait le texte d'un fichier (PDF ou image).
+    Gère les PDF en convertissant chaque page en image avant OCR.
+    """
+    text = ""
+    if file_path.lower().endswith('.pdf'):
+        # Convertir chaque page du PDF en une image et extraire le texte
+        image_paths = convert_pdf_to_images(file_path)
+        for image_path in image_paths:
+            text += extract_text_from_image(image_path) + "\n"
+            os.remove(image_path)  # Supprimer l'image après traitement
+    else:
+        # Si ce n'est pas un PDF, traiter directement comme une image
+        text = extract_text_from_image(file_path)
+    
+    return text
+
+def parse_invoice(text, supplier_config):
+    """
+    Extrait des informations spécifiques d'un texte OCR (SIRET, TVA, Numéro de facture).
+    """
+    siret = re.search(r"SIRET\s?:\s?(\d{14})", text)
+    vat = re.search(r"TVA\s+intracommunautaire\s?:\s?(FR\d+)", text)
+    invoice_number = re.search(r"N°\s?Facture\s?:\s?(\d+)", text)
+
+    return {
+        "siret": siret.group(1) if siret else None,
+        "vat": vat.group(1) if vat else None,
+        "invoice_number": invoice_number.group(1) if invoice_number else None
+    }
+ 
+ /home/odoo/metal-odoo16-p8171/myaddons/invoice_ocr_automation/views
+
+ supplier_ocr_config_views.xml
+ 
+ <odoo>
+    <record id="view_supplier_ocr_config_tree" model="ir.ui.view">
+        <field name="name">supplier.ocr.config.tree</field>
+        <field name="model">supplier.ocr.config</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="siret"/>
+                <field name="vat_number"/>
+                <field name="footer_fees"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+<record id="view_supplier_ocr_config_form" model="ir.ui.view">
+    <field name="name">supplier.ocr.config.form</field>
+    <field name="model">supplier.ocr.config</field>
+    <field name="arch" type="xml">
+        <form string="Configuration OCR des Fournisseurs">
+            <header>
+                <button name="action_acquisition_manuel" type="object" string="Acquisition manuelle" class="btn-primary"/>
+                <button name="action_telecharger_facture" type="object" string="Télécharger la Facture" class="btn-secondary"/>
+            </header>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="siret"/>
+                    <field name="vat_number"/>
+                    <field name="footer_fees"/>
+                </group>
+                <group>
+                    <field name="file_upload"/>
+                    <field name="file_name_upload"/>
+                    <field name="last_attachment" widget="image" string="Dernière Page de la Facture"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+    <template id="grid_overlay_template" inherit_id="web.layout">
+        <xpath expr="//head" position="inside">
+            <style>
+                .grid-overlay {
+                    position: relative;
+                    width: 100%;
+                    height: auto;
+                }
+                .grid-row {
+                    display: flex;
+                }
+                .grid-cell {
+                    border: 1px solid #ccc;
+                    width: 20px;
+                    height: 20px;
+                    text-align: center;
+                    line-height: 20px;
+                }
+            </style>
+        </xpath>
+    </template>
+</odoo>
+
+
+
+ menu_views.xml
+
+ <odoo>
+    <!-- Action pour ouvrir la vue de configuration OCR des fournisseurs -->
+    <record id="action_supplier_ocr_config" model="ir.actions.act_window">
+        <field name="name">Configurations Fournisseurs OCR</field>
+        <field name="res_model">supplier.ocr.config</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu principal sous Comptabilité > Configuration -->
+    <menuitem id="menu_supplier_ocr_root"
+              name="Configuration OCR Fournisseurs"
+              parent="account.menu_finance_configuration"
+              groups="base.group_user"
+              sequence="10"/>
+
+    <!-- Sous-menu pour accéder à la configuration des fournisseurs OCR -->
+    <menuitem id="menu_supplier_ocr_config"
+              name="Configurations Fournisseurs OCR"
+              parent="menu_supplier_ocr_root"
+              action="action_supplier_ocr_config"
+              groups="base.group_user"
+              sequence="10"/>
+</odoo>

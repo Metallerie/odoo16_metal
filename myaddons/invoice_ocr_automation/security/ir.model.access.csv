@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_supplier_ocr_config,supplier.ocr.config,model_supplier_ocr_config,base.group_user,1,1,1,1
+access_invoice_processing,invoice.processing,model_invoice_processing,base.group_user,1,1,1,1
+access_supplier_ocr_config,supplier.ocr.config,model_supplier_ocr_config,account.group_account_manager,1,1,1,1
+access_invoice_processing,invoice.processing,model_invoice_processing,account.group_account_manager,1,1,1,1
+access_ocr_data_acquisition,access_ocr_data_acquisition,model_ocr_data_acquisition,base.group_user,1,1,1,1
+access_ocr_extracted_data,access_ocr_extracted_data,model_ocr_extracted_data,base.group_user,1,1,1,1
+
+
+

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+<!--    search view-->
+    <record id="email_search_view" model="ir.ui.view">
+            <field name="name">email.record.search</field>
+            <field name="model">email.record</field>
+            <field name="arch" type="xml">
+                <search string="Email Search">
+                    <field name="to"/>
+                    <field name="cc"/>
+                    <field name="type"/>
+                    <field name="date_time"/>
+                    <field name="subject"/>
+                    <field name="priority"/>
+                    <field name="body"/>
+                    <field name="tags"/>
+                    <field name="associated_users"/>
+                    <field name="sender"/>
+                    <field name="body" string="Keyword" filter_domain="['|','|','|','|', ('subject','ilike',self), ('to','ilike',self),('cc','=',self), ('body','ilike',self), ('tags','ilike',self)]"/>
+                    <group expand="0">
+                        <filter name="priority" string="Priority" domain="[]"
+                                context="{'group_by':'priority'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+<!--    Tree views classification -->
+
+<!--    All emails-->
+    <record id="action_all_emails" model="ir.actions.act_window">
+        <field name="name">All Emails</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">email.record</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no Emails
+            </p>
+        </field>
+    </record>
+
+<!--    Drafts-->
+    <record id="action_draft_emails" model="ir.actions.act_window">
+        <field name="name">Draft Emails</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">email.record</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('type','=','draft')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no drafts
+            </p>
+        </field>
+    </record>
+
+<!--    Inbox-->
+    <record id="action_received_emails" model="ir.actions.act_window">
+        <field name="name">Received Emails</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">email.record</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="domain">[('type','=','incoming')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no incoming emails
+            </p>
+        </field>
+    </record>
+
+<!--    Sent-->
+    <record id="action_sent_emails" model="ir.actions.act_window">
+        <field name="name">Sent Emails</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">email.record</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="domain">[('type','=','outgoing')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no sent emails
+            </p>
+        </field>
+    </record>
+
+<!--    Email tags view-->
+    <record id="email_tag_action" model="ir.actions.act_window">
+        <field name="name">Email Tag</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">email.tags</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no Tags
+            </p>
+        </field>
+    </record>
+
+<!--    Root menu-->
+    <menuitem id="email_root_menu"
+              name="Email Management"
+              web_icon="rt_mail_plugin,static/description/icon.png"
+              sequence="5"/>
+
+<!--    Tree view actions-->
+    <menuitem id="all_emails_list"
+              name="All Emails"
+              sequence="0"
+              action="action_all_emails"
+              parent="email_root_menu"/>
+
+    <menuitem id="received_emails_list"
+              name="Inbox"
+              sequence="1"
+              action="action_received_emails"
+              parent="email_root_menu"/>
+
+    <menuitem id="email_compose_list"
+              name="Sent"
+              sequence="2"
+              action="action_sent_emails"
+              parent="email_root_menu"/>
+
+    <menuitem id="draft_emails_list"
+              name="Draft"
+              sequence="3"
+              action="action_draft_emails"
+              parent="email_root_menu"/>
+
+    <menuitem id="email_configuration_list"
+              name="Configuration"
+              sequence="4"
+              parent="email_root_menu"/>
+
+    <menuitem id="email_tag_list"
+              name="Tags"
+              action="email_tag_action"
+              parent="email_configuration_list"/>
+
+    <!--menuitem id="inherit_menu_action_fetchmail_server_tree"
+              name="Incoming Mail Servers"
+              parent="email_configuration_list"
+              action="mail.view_email_server_tree"
+              sequence="0"/-->
+    
+</odoo>

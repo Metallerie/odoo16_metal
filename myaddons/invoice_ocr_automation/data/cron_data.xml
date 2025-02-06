@@ -1,0 +1,12 @@
+<odoo>
+    <record id="ir_cron_process_invoices" model="ir.cron">
+        <field name="name">Process Invoice OCR</field>
+        <field name="model_id" ref="model_invoice_processing"/>
+        <field name="state">code</field>
+        <field name="code">model.process_invoice()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="active">True</field>
+    </record>
+</odoo>
+

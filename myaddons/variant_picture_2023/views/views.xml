@@ -1,0 +1,82 @@
+<odoo>
+  <data>
+ 
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="variant_picture_2023.list">
+      <field name="name">variant_picture_2023 list</field>
+      <field name="model">product.template.attribute.value</field>
+      <field name="inherit_id" ref="product.product_template_attribute_value_view_tree"/>
+      <field name="arch" type="xml">
+            <field name="html_color" position="after">
+            <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+        </field>
+      </field>
+    </record>
+        <record model="ir.ui.view" id="variant_picture_2023.form">
+      <field name="name">variant_picture_2023 form</field>
+      <field name="model">product.template.attribute.value</field>
+      <field name="inherit_id" ref="product.product_template_attribute_value_view_form"/>
+      <field name="arch" type="xml">
+            <field name="html_color" position="after">
+            <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+        </field>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="product_attribute_2023_form">
+      <field name="name">product_attribute_2023 form</field>
+      <field name="model">product.attribute</field>
+      <field name="inherit_id" ref="product.product_attribute_view_form"/>
+      <field name="arch" type="xml">
+            <field name="html_color" position="after">
+            <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+        </field>
+      </field>
+    </record>
+
+
+
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="variant_picture_2023.action_window">
+      <field name="name">variant_picture_2023 window</field>
+      <field name="res_model">variant_picture_2023.variant_picture_2023</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="variant_picture_2023.action_server">
+      <field name="name">variant_picture_2023 server</field>
+      <field name="model_id" ref="model_variant_picture_2023_variant_picture_2023"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="variant_picture_2023" id="variant_picture_2023.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="variant_picture_2023.menu_1" parent="variant_picture_2023.menu_root"/>
+    <menuitem name="Menu 2" id="variant_picture_2023.menu_2" parent="variant_picture_2023.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="variant_picture_2023.menu_1_list" parent="variant_picture_2023.menu_1"
+              action="variant_picture_2023.action_window"/>
+    <menuitem name="Server to list" id="variant_picture_2023" parent="variant_picture_2023.menu_2"
+              action="variant_picture_2023.action_server"/>
+-->
+  </data>
+</odoo>

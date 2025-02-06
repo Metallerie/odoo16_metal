@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="associated_users_record_rule" model="ir.rule">
+        <field name="name">Associated Users Record Rule</field>
+        <field name="model_id" ref="model_email_record"/>
+        <field name="domain_force">[('associated_users','in', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+   
+
+</odoo>

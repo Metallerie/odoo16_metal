@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_email,access.email.record,model_email_record,,1,1,1,1
+access_email_tags,access.email.tags,model_email_tags,,1,1,1,1
+
+access_ir_cron_internal_user,ir_cron_internal_user,base.model_ir_cron,base.group_user,1,1,1,0

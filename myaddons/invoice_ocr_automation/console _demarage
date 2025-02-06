@@ -1,0 +1,13 @@
+/home/odoo/odoo16-venv/bin/python3 /home/odoo/sndt-odoo16-p8172/odoo-bin --database=1-sndt-odoo16 --config=/home/odoo/sndt-odoo16-p8172/odoo16.conf --addons-path=/home/odoo/sndt-odoo16-p8172/addons,/home/odoo/sndt-odoo16-p8172/associationaddons,/home/odoo/sndt-odoo16-p8172/odoo/addons,/home/odoo/sndt-odoo16-p8172/myaddons,/home/odoo/sndt-odoo16-p8172/communityaddons,/home/odoo/sndt-odoo16-p8172/knowledge,/home/odoo/sndt-odoo16-p8172/management-system --load=base,web --logfile=/home/odoo/sndt-odoo16-p8172/odoo-server.log
+
+sudo -u odoo odoo -c /home/odoo/metal-odoo16-p8171/odoo16.conf -u base --db-filter=1-metal-odoo16$ --addons-path=/home/odoo/metal-odoo16-p8171/addons,/home/odoo/metal-odoo16-p8171/odoo/addons/,/home/odoo/metal-odoo16-p8171/myaddons/,/home/odoo/metal-odoo16-p8171/communityaddons --load base,web
+
+
+
+
+
+
+
+
+
+/home/odoo/odoo16-venv/bin/python3 /home/odoo/metal-odoo16-p8171/odoo-bin --database=1-metal-odoo16 --config=/home/odoo/metal-odoo16-p8171/odoo16.conf --addons-path=/home/odoo/metal-odoo16-p8171/addons,/home/odoo/metal-odoo16-p8171/odoo/addons/,/home/odoo/metal-odoo16-p8171/myaddons/,/home/odoo/metal-odoo16-p8171/communityaddons --load base,web --logfile /home/odoo/metal-odoo16-p8171/odoo-server.log

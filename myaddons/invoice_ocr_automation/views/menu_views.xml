@@ -1,0 +1,23 @@
+<odoo>
+    <!-- Action pour ouvrir la vue de configuration OCR des fournisseurs -->
+    <record id="action_supplier_ocr_config" model="ir.actions.act_window">
+        <field name="name">Configurations Fournisseurs OCR</field>
+        <field name="res_model">supplier.ocr.config</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu principal sous Comptabilité > Configuration -->
+    <menuitem id="menu_supplier_ocr_root"
+              name="Configuration OCR Fournisseurs"
+              parent="account.menu_finance_configuration"
+              groups="base.group_user"
+              sequence="10"/>
+
+    <!-- Sous-menu pour accéder à la configuration des fournisseurs OCR -->
+    <menuitem id="menu_supplier_ocr_config"
+              name="Configurations Fournisseurs OCR"
+              parent="menu_supplier_ocr_root"
+              action="action_supplier_ocr_config"
+              groups="base.group_user"
+              sequence="10"/>
+</odoo>
